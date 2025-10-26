@@ -1,7 +1,7 @@
 {
   "domain": "bybit_account",
   "name": "Bybit Account",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "documentation": "https://github.com/d3code/home-assistant-bybit-account",
   "issue_tracker": "https://github.com/d3code/home-assistant-bybit-account/issues",
   "codeowners": [
