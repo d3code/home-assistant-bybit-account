@@ -103,7 +103,15 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             _LOGGER.exception("Unexpected exception")
             errors["base"] = "unknown"
         else:
-            return self.async_create_entry(title=info["title"], data=user_input)
+            # Separate credentials (data) from options (scan_interval)
+            data = {
+                "api_key": user_input["api_key"],
+                "api_secret": user_input["api_secret"],
+            }
+            options = {
+                "scan_interval": user_input.get("scan_interval", DEFAULT_SCAN_INTERVAL),
+            }
+            return self.async_create_entry(title=info["title"], data=data, options=options)
 
         return self.async_show_form(
             step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors

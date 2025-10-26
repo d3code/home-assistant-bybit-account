@@ -46,12 +46,6 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def async_update_options(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Update options."""
-    coordinator: BybitAccountDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
-    
-    # Update the coordinator's scan interval if it changed
-    new_interval = entry.options.get("scan_interval", DEFAULT_SCAN_INTERVAL)
-    if coordinator.scan_interval != new_interval:
-        coordinator.update_scan_interval(new_interval)
-    
-    # Reload the entry to apply changes
+    # Simply reload the entry to apply changes
+    # The coordinator will be recreated with the new options
     await hass.config_entries.async_reload(entry.entry_id)
