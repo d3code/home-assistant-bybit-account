@@ -7,14 +7,14 @@
         "data": {
           "api_key": "API Key",
           "api_secret": "API Secret",
-          "scan_interval": "Update Interval (seconds)"
+          "scan_interval": "Update Interval (seconds, min: 5)"
         }
       },
       "options": {
         "title": "Bybit Account Options",
         "description": "Configure update settings for your Bybit account.",
         "data": {
-          "scan_interval": "Update Interval (seconds)"
+          "scan_interval": "Update Interval (seconds, min: 5)"
         }
       }
     },
@@ -33,7 +33,7 @@
         "title": "Bybit Account Options",
         "description": "Configure update settings for your Bybit account.",
         "data": {
-          "scan_interval": "Update Interval (seconds)"
+          "scan_interval": "Update Interval (seconds, min: 5)"
         }
       }
     }

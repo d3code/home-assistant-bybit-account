@@ -5,6 +5,10 @@ DOMAIN = "bybit_account"
 # Default polling interval in seconds
 DEFAULT_SCAN_INTERVAL = 60
 
+# Minimum and maximum polling intervals
+MIN_SCAN_INTERVAL = 5
+MAX_SCAN_INTERVAL = 3600
+
 # Bybit API configuration
 API_BASE_URL = "https://api.bybit.com"
 API_TESTNET_URL = "https://api-testnet.bybit.com"

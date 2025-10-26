@@ -20,7 +20,7 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
         vol.Required("api_key"): str,
         vol.Required("api_secret"): str,
         vol.Optional("scan_interval", default=DEFAULT_SCAN_INTERVAL): vol.All(
-            vol.Coerce(int), vol.Range(min=30, max=3600)
+            vol.Coerce(int), vol.Range(min=5, max=3600)
         ),
     }
 )
@@ -28,7 +28,7 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
 STEP_OPTIONS_DATA_SCHEMA = vol.Schema(
     {
         vol.Optional("scan_interval", default=DEFAULT_SCAN_INTERVAL): vol.All(
-            vol.Coerce(int), vol.Range(min=30, max=3600)
+            vol.Coerce(int), vol.Range(min=5, max=3600)
         ),
     }
 )
