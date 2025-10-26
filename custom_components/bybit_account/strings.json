@@ -1,0 +1,41 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Bybit Account Configuration",
+        "description": "Enter your Bybit API credentials to connect to your account.",
+        "data": {
+          "api_key": "API Key",
+          "api_secret": "API Secret",
+          "scan_interval": "Update Interval (seconds)"
+        }
+      },
+      "options": {
+        "title": "Bybit Account Options",
+        "description": "Configure update settings for your Bybit account.",
+        "data": {
+          "scan_interval": "Update Interval (seconds)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Unable to connect to Bybit API. Please check your internet connection and try again.",
+      "invalid_auth": "Invalid API credentials. Please check your API key and secret.",
+      "unknown": "An unexpected error occurred. Please try again."
+    },
+    "abort": {
+      "already_configured": "This Bybit account is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Bybit Account Options",
+        "description": "Configure update settings for your Bybit account.",
+        "data": {
+          "scan_interval": "Update Interval (seconds)"
+        }
+      }
+    }
+  }
+}
