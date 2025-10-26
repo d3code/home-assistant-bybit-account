@@ -39,6 +39,12 @@ class BybitAccountDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             update_interval=timedelta(seconds=self.scan_interval),
         )
 
+    def update_scan_interval(self, new_interval: int) -> None:
+        """Update the scan interval."""
+        self.scan_interval = new_interval
+        self.update_interval = timedelta(seconds=new_interval)
+        _LOGGER.debug("Updated scan interval to %d seconds", new_interval)
+
     async def _async_update_data(self) -> dict[str, Any]:
         """Update data via library."""
         try:

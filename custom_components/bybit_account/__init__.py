@@ -7,7 +7,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
-from .const import DOMAIN
+from .const import DOMAIN, DEFAULT_SCAN_INTERVAL
 from .coordinator import BybitAccountDataUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -46,4 +46,12 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def async_update_options(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Update options."""
+    coordinator: BybitAccountDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
+    
+    # Update the coordinator's scan interval if it changed
+    new_interval = entry.options.get("scan_interval", DEFAULT_SCAN_INTERVAL)
+    if coordinator.scan_interval != new_interval:
+        coordinator.update_scan_interval(new_interval)
+    
+    # Reload the entry to apply changes
     await hass.config_entries.async_reload(entry.entry_id)

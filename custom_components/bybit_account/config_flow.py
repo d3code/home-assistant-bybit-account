@@ -128,9 +128,15 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         """Manage the options."""
-        if user_input is not None:
-            return self.async_create_entry(title="", data=user_input)
+        try:
+            if user_input is not None:
+                _LOGGER.debug("Updating options: %s", user_input)
+                return self.async_create_entry(title="", data=user_input)
 
-        return self.async_show_form(
-            step_id="init", data_schema=STEP_OPTIONS_DATA_SCHEMA
-        )
+            _LOGGER.debug("Showing options form")
+            return self.async_show_form(
+                step_id="init", data_schema=STEP_OPTIONS_DATA_SCHEMA
+            )
+        except Exception as ex:
+            _LOGGER.error("Error in options flow: %s", ex)
+            raise
