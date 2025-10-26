@@ -88,16 +88,25 @@ class BybitAccountSensor(CoordinatorEntity, SensorEntity):
         )
 
     @property
-    def native_value(self) -> str | None:
+    def native_value(self) -> float | int | None:
         """Return the state of the sensor."""
         if not self.coordinator.data:
             return None
 
         if self._sensor_type == "total_unrealised_pnl":
-            return str(self.coordinator.data.get("total_unrealised_pnl", 0))
+            value = self.coordinator.data.get("total_unrealised_pnl", 0)
+            return float(value) if value else 0.0
         
         balance_data = self.coordinator.data.get("balance", {})
-        return balance_data.get(self._sensor_type, "0")
+        value = balance_data.get(self._sensor_type, "0")
+        
+        # Convert to numeric or return None for empty values
+        if not value or value == "":
+            return None
+        try:
+            return float(value)
+        except (ValueError, TypeError):
+            return None
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
@@ -144,7 +153,7 @@ class BybitPositionSensor(CoordinatorEntity, SensorEntity):
         )
 
     @property
-    def native_value(self) -> str | None:
+    def native_value(self) -> float | int | None:
         """Return the state of the sensor."""
         if not self.coordinator.data:
             return None
@@ -173,10 +182,14 @@ class BybitPositionSensor(CoordinatorEntity, SensorEntity):
         field_name = field_mapping.get(self._sensor_type)
         if field_name:
             value = current_position.get(field_name, "0")
-            # Handle empty liquidation price
-            if self._sensor_type == "liq_price" and value == "":
-                return "0"
-            return value
+            
+            # Convert to numeric or return None for empty values
+            if not value or value == "":
+                return None
+            try:
+                return float(value)
+            except (ValueError, TypeError):
+                return None
 
         return None
 
