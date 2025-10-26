@@ -114,6 +114,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         config_entry: config_entries.ConfigEntry,
     ) -> OptionsFlowHandler:
         """Get the options flow for this handler."""
+        _LOGGER.debug("Creating options flow handler for entry: %s", config_entry.entry_id)
         return OptionsFlowHandler(config_entry)
 
 
@@ -122,6 +123,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
 
     def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
         """Initialize options flow."""
+        _LOGGER.debug("Initializing OptionsFlowHandler for entry: %s", config_entry.entry_id)
         self.config_entry = config_entry
 
     async def async_step_init(
