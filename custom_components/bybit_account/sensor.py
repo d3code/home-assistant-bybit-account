@@ -7,6 +7,7 @@ from typing import Any
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -30,7 +31,7 @@ async def async_setup_entry(
 
     entities = []
 
-    # Add account-level sensors
+    # Add account-level sensors (Wallet device)
     for sensor_type, sensor_info in ACCOUNT_SENSOR_TYPES.items():
         entities.append(
             BybitAccountSensor(
@@ -40,7 +41,7 @@ async def async_setup_entry(
             )
         )
 
-    # Add position-specific sensors
+    # Add position-specific sensors (separate device for each trading pair)
     if coordinator.data and "positions" in coordinator.data:
         for position in coordinator.data["positions"]:
             symbol = position.get("symbol", "")
@@ -76,6 +77,15 @@ class BybitAccountSensor(CoordinatorEntity, SensorEntity):
         self._attr_icon = sensor_info.get("icon")
         self._attr_native_unit_of_measurement = sensor_info.get("unit_of_measurement")
         self._attr_device_class = sensor_info.get("device_class")
+        
+        # Device information for wallet
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, coordinator.entry.entry_id, "wallet")},
+            name="Bybit Wallet",
+            manufacturer="Bybit",
+            model="Trading Account",
+            sw_version="1.0",
+        )
 
     @property
     def native_value(self) -> str | None:
@@ -123,6 +133,15 @@ class BybitPositionSensor(CoordinatorEntity, SensorEntity):
         self._attr_icon = sensor_info.get("icon")
         self._attr_native_unit_of_measurement = sensor_info.get("unit_of_measurement")
         self._attr_device_class = sensor_info.get("device_class")
+        
+        # Device information for each trading pair
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, coordinator.entry.entry_id, self._symbol)},
+            name=f"Bybit {self._symbol}",
+            manufacturer="Bybit",
+            model="Trading Position",
+            sw_version="1.0",
+        )
 
     @property
     def native_value(self) -> str | None:
