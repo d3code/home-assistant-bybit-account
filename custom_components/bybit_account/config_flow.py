@@ -109,17 +109,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors
         )
 
-    async def async_step_options(
-        self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
-        """Handle options flow."""
-        if user_input is not None:
-            return self.async_create_entry(title="", data=user_input)
-
-        return self.async_show_form(
-            step_id="options", data_schema=STEP_OPTIONS_DATA_SCHEMA
-        )
-
     @staticmethod
     async def async_get_options_flow(
         config_entry: config_entries.ConfigEntry,
