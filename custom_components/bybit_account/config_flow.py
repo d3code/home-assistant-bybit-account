@@ -60,7 +60,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
         
         # Try to get account info to validate credentials
         account_info = await hass.async_add_executor_job(
-            session.get_account_info, {"accountType": "UNIFIED"}
+            session.get_account_info
         )
         
         if account_info.get("retCode") != 0:

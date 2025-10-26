@@ -46,14 +46,12 @@ class BybitAccountDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             
             # Fetch position data
             positions_response = await self.hass.async_add_executor_job(
-                self.session.get_positions,
-                {"category": ACCOUNT_CATEGORY}
+                lambda: self.session.get_positions(category=ACCOUNT_CATEGORY)
             )
             
             # Fetch account balance
             balance_response = await self.hass.async_add_executor_job(
-                self.session.get_wallet_balance,
-                {"accountType": "UNIFIED"}
+                lambda: self.session.get_wallet_balance(accountType="UNIFIED")
             )
             
             # Process positions data
