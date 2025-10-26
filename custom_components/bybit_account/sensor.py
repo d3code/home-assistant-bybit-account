@@ -104,7 +104,13 @@ class BybitAccountSensor(CoordinatorEntity, SensorEntity):
         if not value or value == "":
             return None
         try:
-            return float(value)
+            numeric_value = float(value)
+            
+            # Convert rate values from decimal to percentage
+            if self._sensor_type in ["account_im_rate", "account_mm_rate"]:
+                return numeric_value * 100
+            
+            return numeric_value
         except (ValueError, TypeError):
             return None
 
