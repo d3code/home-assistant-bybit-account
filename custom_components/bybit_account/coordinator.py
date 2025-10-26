@@ -45,14 +45,18 @@ class BybitAccountDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             _LOGGER.debug("Fetching Bybit account data")
             
             # Fetch position data
+            _LOGGER.debug("Calling get_positions with category=%s, settleCoin=USDT", ACCOUNT_CATEGORY)
             positions_response = await self.hass.async_add_executor_job(
-                lambda: self.session.get_positions(category=ACCOUNT_CATEGORY)
+                lambda: self.session.get_positions(category=ACCOUNT_CATEGORY, settleCoin="USDT")
             )
+            _LOGGER.debug("Positions response: %s", positions_response)
             
             # Fetch account balance
+            _LOGGER.debug("Calling get_wallet_balance with accountType=UNIFIED")
             balance_response = await self.hass.async_add_executor_job(
                 lambda: self.session.get_wallet_balance(accountType="UNIFIED")
             )
+            _LOGGER.debug("Balance response: %s", balance_response)
             
             # Process positions data
             positions = []
@@ -105,4 +109,6 @@ class BybitAccountDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             
         except Exception as err:
             _LOGGER.error("Error communicating with Bybit API: %s", err)
+            _LOGGER.error("Error type: %s", type(err).__name__)
+            _LOGGER.error("Error details: %s", str(err))
             raise UpdateFailed(f"Error communicating with Bybit API: {err}") from err
