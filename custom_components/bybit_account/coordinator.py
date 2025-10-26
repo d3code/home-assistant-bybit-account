@@ -169,17 +169,52 @@ class BybitAccountDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             if balance_response.get("retCode") == 0:
                 balance_list = balance_response.get("result", {}).get("list", [])
                 if balance_list:
-                    # Get USDT balance (primary trading currency)
-                    usdt_balance = next(
-                        (item for item in balance_list if item.get("coin") == "USDT"),
-                        {}
-                    )
+                    # Get the first account (should be UNIFIED)
+                    account = balance_list[0]
+                    
+                    # Account-level metrics (from the API documentation)
                     balance_data = {
-                        "total_equity": usdt_balance.get("totalEquity", "0"),
-                        "available_balance": usdt_balance.get("availableToWithdraw", "0"),
-                        "wallet_balance": usdt_balance.get("walletBalance", "0"),
+                        # Account-level totals (USD values)
+                        "total_equity": account.get("totalEquity", "0"),
+                        "total_wallet_balance": account.get("totalWalletBalance", "0"),
+                        "total_margin_balance": account.get("totalMarginBalance", "0"),
+                        "total_available_balance": account.get("totalAvailableBalance", "0"),
+                        "total_perp_upl": account.get("totalPerpUPL", "0"),
+                        "total_initial_margin": account.get("totalInitialMargin", "0"),
+                        "total_maintenance_margin": account.get("totalMaintenanceMargin", "0"),
+                        
+                        # Account rates
+                        "account_im_rate": account.get("accountIMRate", "0"),
+                        "account_mm_rate": account.get("accountMMRate", "0"),
+                        
+                        # Coin-specific data (find USDT if available)
+                        "usdt_wallet_balance": "0",
+                        "usdt_available_to_withdraw": "0",
+                        "usdt_equity": "0",
+                        "usdt_unrealised_pnl": "0",
                     }
-                _LOGGER.debug("Fetched balance data: %s", balance_data)
+                    
+                    # Look for USDT coin data
+                    coin_list = account.get("coin", [])
+                    usdt_coin = next(
+                        (coin for coin in coin_list if coin.get("coin") == "USDT"),
+                        None
+                    )
+                    
+                    if usdt_coin:
+                        balance_data.update({
+                            "usdt_wallet_balance": usdt_coin.get("walletBalance", "0"),
+                            "usdt_available_to_withdraw": usdt_coin.get("availableToWithdraw", "0"),
+                            "usdt_equity": usdt_coin.get("equity", "0"),
+                            "usdt_unrealised_pnl": usdt_coin.get("unrealisedPnl", "0"),
+                            "usdt_usd_value": usdt_coin.get("usdValue", "0"),
+                            "usdt_borrow_amount": usdt_coin.get("borrowAmount", "0"),
+                            "usdt_accrued_interest": usdt_coin.get("accruedInterest", "0"),
+                        })
+                    
+                    _LOGGER.debug("Fetched comprehensive balance data: %s", balance_data)
+                else:
+                    _LOGGER.warning("No account data found in balance response")
             else:
                 _LOGGER.warning(
                     "Failed to fetch balance: %s", 
