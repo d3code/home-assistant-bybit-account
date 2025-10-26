@@ -56,8 +56,8 @@ jobs:
           VERSION_NUMBER=${NEW_VERSION#v}
           
           # Update manifest.json
-          jq --arg version "$VERSION_NUMBER" '.version = $version' custom_components/bybit-account/manifest.json > temp.json
-          mv temp.json custom_components/bybit-account/manifest.json
+          jq --arg version "$VERSION_NUMBER" '.version = $version' custom_components/bybit_account/manifest.json > temp.json
+          mv temp.json custom_components/bybit_account/manifest.json
           
           echo "Updated manifest.json to version $VERSION_NUMBER"
       
@@ -66,7 +66,7 @@ jobs:
           NEW_VERSION="${{ steps.next_version.outputs.new_version }}"
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add custom_components/bybit-account/manifest.json
+          git add custom_components/bybit_account/manifest.json
           git commit -m "chore: bump version to $NEW_VERSION" || exit 0
           git tag -a "$NEW_VERSION" -m "Release $NEW_VERSION"
           git push origin "$NEW_VERSION"
